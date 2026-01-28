@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-center;
+            background: #f5f5f5;
+            font-family: sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2a9d8f;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Stranica</h1>
+        <p>Ako vidiš ovo, HTML radi!</p>
+        <p id="status">Provjeravam React...</p>
+    </div>
+    <script>
+        console.log('HTML loaded');
+        setTimeout(() => {
+            document.getElementById('status').textContent = 'React se učitava...';
+        }, 1000);
+    </script>
+</body>
+</html>

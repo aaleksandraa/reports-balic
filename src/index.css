@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    --primary: 174 62% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 94%;
+    --secondary-foreground: 215 25% 25%;
+
+    --muted: 210 15% 92%;
+    --muted-foreground: 215 15% 45%;
+
+    --accent: 174 50% 92%;
+    --accent-foreground: 174 62% 30%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
+    --ring: 174 62% 40%;
+
+    --radius: 0.75rem;
+
+    /* Custom medical theme colors */
+    --medical-teal: 174 62% 40%;
+    --medical-teal-light: 174 50% 92%;
+    --medical-navy: 215 50% 23%;
+    --medical-gray: 215 15% 60%;
+    
+    /* Section colors */
+    --fiscal: 174 62% 40%;
+    --fiscal-light: 174 50% 95%;
+    --non-fiscal: 199 89% 48%;
+    --non-fiscal-light: 199 80% 95%;
+    --card-payment: 271 81% 56%;
+    --card-payment-light: 271 70% 95%;
+    --wire-transfer: 38 92% 50%;
+    --wire-transfer-light: 38 80% 95%;
+    --associates: 142 71% 45%;
+    --associates-light: 142 60% 95%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 174 62% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 174 50% 92%;
+    --sidebar-accent-foreground: 174 62% 30%;
+    --sidebar-border: 214 20% 88%;
+    --sidebar-ring: 174 62% 40%;
+  }
+
+  .dark {
+    --background: 215 30% 8%;
+    --foreground: 210 20% 98%;
+
+    --card: 215 30% 12%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 215 30% 12%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 174 62% 50%;
+    --primary-foreground: 215 30% 8%;
+
+    --secondary: 215 25% 18%;
+    --secondary-foreground: 210 20% 90%;
+
+    --muted: 215 25% 18%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 174 40% 20%;
+    --accent-foreground: 174 62% 70%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 60% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 80% 45%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 199 75% 45%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 215 25% 20%;
+    --input: 215 25% 20%;
+    --ring: 174 62% 50%;
+
+    --sidebar-background: 215 30% 10%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 174 62% 50%;
+    --sidebar-primary-foreground: 215 30% 8%;
+    --sidebar-accent: 174 40% 20%;
+    --sidebar-accent-foreground: 174 62% 70%;
+    --sidebar-border: 215 25% 20%;
+    --sidebar-ring: 174 62% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .section-card {
+    @apply bg-card rounded-xl border shadow-sm p-6;
+  }
+
+  .section-header {
+    @apply flex items-center gap-3 mb-4 pb-3 border-b;
+  }
+
+  .section-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .section-badge-fiscal {
+    @apply bg-[hsl(var(--fiscal-light))] text-[hsl(var(--fiscal))];
+  }
+
+  .section-badge-non-fiscal {
+    @apply bg-[hsl(var(--non-fiscal-light))] text-[hsl(var(--non-fiscal))];
+  }
+
+  .section-badge-card-payment {
+    @apply bg-[hsl(var(--card-payment-light))] text-[hsl(var(--card-payment))];
+  }
+
+  .section-badge-wire-transfer {
+    @apply bg-[hsl(var(--wire-transfer-light))] text-[hsl(var(--wire-transfer))];
+  }
+
+  .section-badge-associates {
+    @apply bg-[hsl(var(--associates-light))] text-[hsl(var(--associates))];
+  }
+
+  .stat-card {
+    @apply bg-card rounded-xl border p-5 transition-all hover:shadow-md;
+  }
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply text-left font-medium text-muted-foreground px-3 py-2 border-b;
+  }
+
+  .data-table td {
+    @apply px-3 py-2 border-b border-border/50;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-muted/30;
+  }
+
+  .input-cell {
+    @apply w-full bg-transparent border-0 focus:ring-2 focus:ring-primary/20 rounded px-2 py-1 text-center;
+  }
+
+  .summary-row {
+    @apply font-semibold bg-muted/50;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors;
+  }
+
+  .nav-item-active {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground;
+  }
+
+  .day-tab {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all;
+  }
+
+  .day-tab-inactive {
+    @apply text-muted-foreground hover:bg-muted;
+  }
+
+  .day-tab-active {
+    @apply bg-primary text-primary-foreground shadow-sm;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(174 62% 50%) 100%);
+  }
+
+  .gradient-card {
+    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(210 20% 96%) 100%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(199 89% 48%) 100%);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes scaleIn {
+    from { 
+      opacity: 0; 
+      transform: scale(0.95); 
+    }
+    to { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+  }
+}
