@@ -180,6 +180,8 @@ export default function Report() {
             <WireTransferSection />
           </div>
 
+          <UnpaidExamsSection />
+
           <AssociatesSection />
 
           <TodayPatientsSection />
@@ -188,8 +190,6 @@ export default function Report() {
             <PatientsSection />
             <WorkScheduleSection />
           </div>
-
-          <UnpaidExamsSection />
           
           <NotesSection />
 

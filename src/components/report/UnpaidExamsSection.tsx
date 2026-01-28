@@ -112,16 +112,16 @@ export function UnpaidExamsSection() {
                 <div>
                   <Label htmlFor={`doctor-${index}`}>Doktor</Label>
                   <Select
-                    value={exam.doctor_id || ""}
+                    value={exam.doctor_id || "none"}
                     onValueChange={(value) =>
-                      updateUnpaidExam(index, "doctor_id", value || null)
+                      updateUnpaidExam(index, "doctor_id", value === "none" ? null : value)
                     }
                   >
                     <SelectTrigger id={`doctor-${index}`}>
                       <SelectValue placeholder="Izaberite doktora" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Bez doktora</SelectItem>
+                      <SelectItem value="none">Bez doktora</SelectItem>
                       {doctors.map((doctor) => (
                         <SelectItem key={doctor.id} value={doctor.id}>
                           {doctor.first_name} {doctor.last_name}
