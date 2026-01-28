@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Plus, Trash2, Users, List, Grid3x3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +11,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useReportContext } from '@/contexts/ReportContext';
 import { useServices } from '@/hooks/useServices';
 
@@ -35,7 +33,6 @@ interface DetailedEntry {
 export function TodayPatientsSection() {
   const { currentReport, updateCurrentReport } = useReportContext();
   const { services } = useServices();
-  const [activeTab, setActiveTab] = useState<'quick' | 'detailed'>('quick');
 
   const quickEntries: QuickEntry[] = currentReport.today_patients_quick || [];
   const detailedEntries: DetailedEntry[] = currentReport.today_patients_detailed || [];
@@ -152,136 +149,150 @@ export function TodayPatientsSection() {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'quick' | 'detailed')}>
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="quick" className="flex items-center gap-2">
-              <Grid3x3 className="h-4 w-4" />
-              Brzi Unos
-            </TabsTrigger>
-            <TabsTrigger value="detailed" className="flex items-center gap-2">
-              <List className="h-4 w-4" />
-              Detaljni Unos
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Quick Entry Tab */}
-          <TabsContent value="quick" className="space-y-4">
-            <div className="text-sm text-muted-foreground mb-4">
-              Brzo unesite ukupan broj pacijenata po usluzi (npr. 2x PRP, 3x Mezoterapija)
+      <CardContent className="space-y-6">
+        {/* Quick Entry Section */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Grid3x3 className="h-4 w-4 text-muted-foreground" />
+              <h3 className="font-semibold text-sm">Brzi Unos</h3>
+              <span className="text-xs text-muted-foreground">(ukupan broj po usluzi)</span>
             </div>
-
-            {quickEntries.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Nema unesenih podataka. Kliknite "Dodaj" da dodate brzi unos.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {quickEntries.map((entry, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="md:col-span-2">
-                        <Label htmlFor={`quick-service-${index}`}>Usluga</Label>
-                        <Select
-                          value={entry.service_id}
-                          onValueChange={(value) => updateQuickEntry(index, 'service_id', value)}
-                        >
-                          <SelectTrigger id={`quick-service-${index}`}>
-                            <SelectValue placeholder="Izaberite uslugu" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {services.map((service) => (
-                              <SelectItem key={service.id} value={service.id}>
-                                {service.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <div className="flex-1">
-                          <Label htmlFor={`quick-count-${index}`}>Broj</Label>
-                          <Input
-                            id={`quick-count-${index}`}
-                            type="number"
-                            min="1"
-                            value={entry.count}
-                            onChange={(e) =>
-                              updateQuickEntry(index, 'count', parseInt(e.target.value) || 1)
-                            }
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => removeQuickEntry(index)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            <Button onClick={addQuickEntry} variant="outline" className="w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              Dodaj Brzi Unos
+            <Button onClick={addQuickEntry} size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-1" />
+              Dodaj
             </Button>
-          </TabsContent>
+          </div>
 
-          {/* Detailed Entry Tab */}
-          <TabsContent value="detailed" className="space-y-4">
-            <div className="text-sm text-muted-foreground mb-4">
-              Unesite detaljne podatke za svakog pacijenta (ime, prezime, usluga, napomena)
+          {quickEntries.length === 0 ? (
+            <p className="text-xs text-muted-foreground text-center py-3 bg-muted/30 rounded-lg">
+              Nema brzih unosa
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {quickEntries.map((entry, index) => (
+                <Card key={index} className="p-3 bg-muted/30">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                    <div className="md:col-span-3">
+                      <Label htmlFor={`quick-service-${index}`} className="text-xs">Usluga</Label>
+                      <Select
+                        value={entry.service_id}
+                        onValueChange={(value) => updateQuickEntry(index, 'service_id', value)}
+                      >
+                        <SelectTrigger id={`quick-service-${index}`} className="h-9">
+                          <SelectValue placeholder="Izaberite uslugu" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {services.map((service) => (
+                            <SelectItem key={service.id} value={service.id}>
+                              {service.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`quick-count-${index}`} className="text-xs">Broj</Label>
+                      <Input
+                        id={`quick-count-${index}`}
+                        type="number"
+                        min="1"
+                        value={entry.count}
+                        onChange={(e) =>
+                          updateQuickEntry(index, 'count', parseInt(e.target.value) || 1)
+                        }
+                        className="h-9"
+                      />
+                    </div>
+
+                    <div className="flex items-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => removeQuickEntry(index)}
+                        className="w-full h-9"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
+          )}
+        </div>
 
-            {detailedEntries.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Nema unesenih podataka. Kliknite "Dodaj" da dodate detaljni unos.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {detailedEntries.map((entry, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">ili</span>
+          </div>
+        </div>
+
+        {/* Detailed Entry Section */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <List className="h-4 w-4 text-muted-foreground" />
+              <h3 className="font-semibold text-sm">Detaljni Unos</h3>
+              <span className="text-xs text-muted-foreground">(ime, prezime, usluga)</span>
+            </div>
+            <Button onClick={addDetailedEntry} size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-1" />
+              Dodaj
+            </Button>
+          </div>
+
+          {detailedEntries.length === 0 ? (
+            <p className="text-xs text-muted-foreground text-center py-3 bg-muted/30 rounded-lg">
+              Nema detaljnih unosa
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {detailedEntries.map((entry, index) => (
+                <Card key={index} className="p-3 bg-muted/30">
+                  <div className="space-y-2">
+                    {/* First Row: Name, Surname, Service, Delete */}
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
                       <div>
-                        <Label htmlFor={`detailed-first-${index}`}>Ime</Label>
+                        <Label htmlFor={`detailed-first-${index}`} className="text-xs">Ime</Label>
                         <Input
                           id={`detailed-first-${index}`}
                           value={entry.patient_first_name}
                           onChange={(e) =>
                             updateDetailedEntry(index, 'patient_first_name', e.target.value)
                           }
-                          placeholder="Unesite ime"
+                          placeholder="Ime"
+                          className="h-9"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor={`detailed-last-${index}`}>Prezime</Label>
+                        <Label htmlFor={`detailed-last-${index}`} className="text-xs">Prezime</Label>
                         <Input
                           id={`detailed-last-${index}`}
                           value={entry.patient_last_name}
                           onChange={(e) =>
                             updateDetailedEntry(index, 'patient_last_name', e.target.value)
                           }
-                          placeholder="Unesite prezime"
+                          placeholder="Prezime"
+                          className="h-9"
                         />
                       </div>
 
                       <div className="md:col-span-2">
-                        <Label htmlFor={`detailed-service-${index}`}>Usluga</Label>
+                        <Label htmlFor={`detailed-service-${index}`} className="text-xs">Usluga</Label>
                         <Select
                           value={entry.service_id}
                           onValueChange={(value) =>
                             updateDetailedEntry(index, 'service_id', value)
                           }
                         >
-                          <SelectTrigger id={`detailed-service-${index}`}>
+                          <SelectTrigger id={`detailed-service-${index}`} className="h-9">
                             <SelectValue placeholder="Izaberite uslugu" />
                           </SelectTrigger>
                           <SelectContent>
@@ -294,47 +305,43 @@ export function TodayPatientsSection() {
                         </Select>
                       </div>
 
-                      <div className="md:col-span-2">
-                        <Label htmlFor={`detailed-notes-${index}`}>Napomena</Label>
-                        <Textarea
-                          id={`detailed-notes-${index}`}
-                          value={entry.notes}
-                          onChange={(e) =>
-                            updateDetailedEntry(index, 'notes', e.target.value)
-                          }
-                          placeholder="Dodatne napomene..."
-                          rows={2}
-                        />
-                      </div>
-
-                      <div className="md:col-span-2">
+                      <div className="flex items-end">
                         <Button
                           variant="destructive"
                           size="sm"
                           onClick={() => removeDetailedEntry(index)}
-                          className="w-full"
+                          className="w-full h-9"
                         >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Ukloni
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                  </Card>
-                ))}
-              </div>
-            )}
 
-            <Button onClick={addDetailedEntry} variant="outline" className="w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              Dodaj Detaljni Unos
-            </Button>
-          </TabsContent>
-        </Tabs>
+                    {/* Second Row: Notes */}
+                    <div>
+                      <Label htmlFor={`detailed-notes-${index}`} className="text-xs">Napomena</Label>
+                      <Textarea
+                        id={`detailed-notes-${index}`}
+                        value={entry.notes}
+                        onChange={(e) =>
+                          updateDetailedEntry(index, 'notes', e.target.value)
+                        }
+                        placeholder="Dodatne napomene..."
+                        rows={2}
+                        className="resize-none"
+                      />
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Summary */}
         {Object.keys(serviceSummary).length > 0 && (
-          <Card className="mt-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-            <CardHeader>
+          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center justify-between">
                 <span>📊 Pregled po Uslugama Danas</span>
                 <span className="text-sm font-normal text-muted-foreground">
@@ -343,17 +350,17 @@ export function TodayPatientsSection() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {Object.entries(serviceSummary)
-                  .sort(([, a], [, b]) => b - a) // Sort by count descending
+                  .sort(([, a], [, b]) => b - a)
                   .map(([serviceName, count]) => (
                     <div 
                       key={serviceName} 
-                      className="flex justify-between items-center p-3 bg-background rounded-lg border"
+                      className="flex justify-between items-center p-2 bg-background rounded-lg border"
                     >
-                      <span className="font-medium">{serviceName}</span>
+                      <span className="font-medium text-sm">{serviceName}</span>
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-24 bg-muted rounded-full overflow-hidden">
+                        <div className="h-2 w-20 bg-muted rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-primary transition-all"
                             style={{ 
@@ -361,15 +368,15 @@ export function TodayPatientsSection() {
                             }}
                           />
                         </div>
-                        <span className="font-bold text-lg text-primary min-w-[3rem] text-right">
+                        <span className="font-bold text-primary min-w-[2.5rem] text-right">
                           {count}x
                         </span>
                       </div>
                     </div>
                   ))}
-                <div className="pt-3 border-t-2 border-primary/30 flex justify-between items-center">
-                  <span className="font-bold text-lg">UKUPNO PACIJENATA</span>
-                  <span className="text-2xl font-bold text-primary">{getTotalPatients()}</span>
+                <div className="pt-2 border-t-2 border-primary/30 flex justify-between items-center">
+                  <span className="font-bold">UKUPNO PACIJENATA</span>
+                  <span className="text-xl font-bold text-primary">{getTotalPatients()}</span>
                 </div>
               </div>
             </CardContent>

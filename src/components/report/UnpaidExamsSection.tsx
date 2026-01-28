@@ -28,6 +28,13 @@ export function UnpaidExamsSection() {
 
   const unpaidExams: UnpaidExam[] = currentReport.unpaid_exams || [];
 
+  // Combine doctors and associates for the dropdown
+  const allStaff = doctors.map(d => ({
+    id: d.id,
+    name: `${d.first_name} ${d.last_name}`,
+    role: d.role
+  }));
+
   const addUnpaidExam = () => {
     const newExam: UnpaidExam = {
       patient_first_name: "",
@@ -63,41 +70,97 @@ export function UnpaidExamsSection() {
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         {unpaidExams.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
             Nema nenaplaćenih pregleda. Kliknite "Dodaj" da dodate novi.
           </p>
         ) : (
           unpaidExams.map((exam, index) => (
-            <Card key={index} className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor={`first-name-${index}`}>Ime Pacijenta</Label>
-                  <Input
-                    id={`first-name-${index}`}
-                    value={exam.patient_first_name}
-                    onChange={(e) =>
-                      updateUnpaidExam(index, "patient_first_name", e.target.value)
-                    }
-                    placeholder="Unesite ime"
-                  />
+            <Card key={index} className="p-3 bg-muted/30">
+              <div className="space-y-3">
+                {/* First Row: Name, Surname, Doctor/Associate */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div>
+                    <Label htmlFor={`first-name-${index}`} className="text-xs">Ime</Label>
+                    <Input
+                      id={`first-name-${index}`}
+                      value={exam.patient_first_name}
+                      onChange={(e) =>
+                        updateUnpaidExam(index, "patient_first_name", e.target.value)
+                      }
+                      placeholder="Ime pacijenta"
+                      className="h-9"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor={`last-name-${index}`} className="text-xs">Prezime</Label>
+                    <Input
+                      id={`last-name-${index}`}
+                      value={exam.patient_last_name}
+                      onChange={(e) =>
+                        updateUnpaidExam(index, "patient_last_name", e.target.value)
+                      }
+                      placeholder="Prezime pacijenta"
+                      className="h-9"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor={`doctor-${index}`} className="text-xs">Doktor/Saradnik</Label>
+                    <Select
+                      value={exam.doctor_id || "none"}
+                      onValueChange={(value) =>
+                        updateUnpaidExam(index, "doctor_id", value === "none" ? null : value)
+                      }
+                    >
+                      <SelectTrigger id={`doctor-${index}`} className="h-9">
+                        <SelectValue placeholder="Izaberite" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Bez doktora</SelectItem>
+                        {allStaff
+                          .filter(s => s.role === 'doctor')
+                          .map((staff) => (
+                            <SelectItem key={staff.id} value={staff.id}>
+                              {staff.name}
+                            </SelectItem>
+                          ))}
+                        {allStaff.filter(s => s.role === 'associate').length > 0 && (
+                          <>
+                            <SelectItem value="separator" disabled className="text-xs font-semibold">
+                              — Saradnici —
+                            </SelectItem>
+                            {allStaff
+                              .filter(s => s.role === 'associate')
+                              .map((staff) => (
+                                <SelectItem key={staff.id} value={staff.id}>
+                                  {staff.name}
+                                </SelectItem>
+                              ))}
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-end">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeUnpaidExam(index)}
+                      className="w-full h-9"
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Ukloni
+                    </Button>
+                  </div>
                 </div>
 
+                {/* Second Row: Reason */}
                 <div>
-                  <Label htmlFor={`last-name-${index}`}>Prezime Pacijenta</Label>
-                  <Input
-                    id={`last-name-${index}`}
-                    value={exam.patient_last_name}
-                    onChange={(e) =>
-                      updateUnpaidExam(index, "patient_last_name", e.target.value)
-                    }
-                    placeholder="Unesite prezime"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <Label htmlFor={`reason-${index}`}>Razlog Nenaplaćivanja</Label>
+                  <Label htmlFor={`reason-${index}`} className="text-xs">Razlog Nenaplaćivanja</Label>
                   <Textarea
                     id={`reason-${index}`}
                     value={exam.reason}
@@ -106,41 +169,8 @@ export function UnpaidExamsSection() {
                     }
                     placeholder="Npr. Kontrolni pregled, Socijalni slučaj, itd."
                     rows={2}
+                    className="resize-none"
                   />
-                </div>
-
-                <div>
-                  <Label htmlFor={`doctor-${index}`}>Doktor</Label>
-                  <Select
-                    value={exam.doctor_id || "none"}
-                    onValueChange={(value) =>
-                      updateUnpaidExam(index, "doctor_id", value === "none" ? null : value)
-                    }
-                  >
-                    <SelectTrigger id={`doctor-${index}`}>
-                      <SelectValue placeholder="Izaberite doktora" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Bez doktora</SelectItem>
-                      {doctors.map((doctor) => (
-                        <SelectItem key={doctor.id} value={doctor.id}>
-                          {doctor.first_name} {doctor.last_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex items-end">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeUnpaidExam(index)}
-                    className="w-full"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Ukloni
-                  </Button>
                 </div>
               </div>
             </Card>
@@ -148,9 +178,9 @@ export function UnpaidExamsSection() {
         )}
 
         {unpaidExams.length > 0 && (
-          <div className="pt-4 border-t">
+          <div className="pt-3 border-t">
             <p className="text-sm font-medium">
-              Ukupno nenaplaćenih pregleda: <span className="text-lg">{unpaidExams.length}</span>
+              Ukupno nenaplaćenih pregleda: <span className="text-lg font-bold">{unpaidExams.length}</span>
             </p>
           </div>
         )}
