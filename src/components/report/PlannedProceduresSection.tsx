@@ -39,9 +39,9 @@ const MONTHS = [
 ];
 
 export function PlannedProceduresSection() {
-  const { reportData, updateReportData } = useReportContext();
+  const { currentReport, updateCurrentReport } = useReportContext();
 
-  const plannedProcedures: PlannedProcedure[] = reportData.planned_procedures || [];
+  const plannedProcedures: PlannedProcedure[] = currentReport.planned_procedures || [];
 
   const addProcedure = () => {
     const newProcedure: PlannedProcedure = {
@@ -54,7 +54,7 @@ export function PlannedProceduresSection() {
       notes: '',
     };
 
-    updateReportData({
+    updateCurrentReport({
       planned_procedures: [...plannedProcedures, newProcedure],
     });
   };
@@ -70,12 +70,12 @@ export function PlannedProceduresSection() {
       updated[index].planned_date = '';
     }
     
-    updateReportData({ planned_procedures: updated });
+    updateCurrentReport({ planned_procedures: updated });
   };
 
   const removeProcedure = (index: number) => {
     const updated = plannedProcedures.filter((_, i) => i !== index);
-    updateReportData({ planned_procedures: updated });
+    updateCurrentReport({ planned_procedures: updated });
   };
 
   const getCurrentYear = () => new Date().getFullYear();

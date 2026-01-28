@@ -33,12 +33,12 @@ interface DetailedEntry {
 }
 
 export function TodayPatientsSection() {
-  const { reportData, updateReportData } = useReportContext();
+  const { currentReport, updateCurrentReport } = useReportContext();
   const { services } = useServices();
   const [activeTab, setActiveTab] = useState<'quick' | 'detailed'>('quick');
 
-  const quickEntries: QuickEntry[] = reportData.today_patients_quick || [];
-  const detailedEntries: DetailedEntry[] = reportData.today_patients_detailed || [];
+  const quickEntries: QuickEntry[] = currentReport.today_patients_quick || [];
+  const detailedEntries: DetailedEntry[] = currentReport.today_patients_detailed || [];
 
   // Quick Entry Functions
   const addQuickEntry = () => {
@@ -47,7 +47,7 @@ export function TodayPatientsSection() {
       service_name: '',
       count: 1,
     };
-    updateReportData({
+    updateCurrentReport({
       today_patients_quick: [...quickEntries, newEntry],
     });
   };
@@ -66,12 +66,12 @@ export function TodayPatientsSection() {
       updated[index] = { ...updated[index], [field]: value };
     }
     
-    updateReportData({ today_patients_quick: updated });
+    updateCurrentReport({ today_patients_quick: updated });
   };
 
   const removeQuickEntry = (index: number) => {
     const updated = quickEntries.filter((_, i) => i !== index);
-    updateReportData({ today_patients_quick: updated });
+    updateCurrentReport({ today_patients_quick: updated });
   };
 
   // Detailed Entry Functions
@@ -83,7 +83,7 @@ export function TodayPatientsSection() {
       service_name: '',
       notes: '',
     };
-    updateReportData({
+    updateCurrentReport({
       today_patients_detailed: [...detailedEntries, newEntry],
     });
   };
@@ -102,12 +102,12 @@ export function TodayPatientsSection() {
       updated[index] = { ...updated[index], [field]: value };
     }
     
-    updateReportData({ today_patients_detailed: updated });
+    updateCurrentReport({ today_patients_detailed: updated });
   };
 
   const removeDetailedEntry = (index: number) => {
     const updated = detailedEntries.filter((_, i) => i !== index);
-    updateReportData({ today_patients_detailed: updated });
+    updateCurrentReport({ today_patients_detailed: updated });
   };
 
   // Calculate totals

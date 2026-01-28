@@ -23,10 +23,10 @@ interface UnpaidExam {
 }
 
 export function UnpaidExamsSection() {
-  const { reportData, updateReportData } = useReportContext();
+  const { currentReport, updateCurrentReport } = useReportContext();
   const { doctors } = useDoctors();
 
-  const unpaidExams: UnpaidExam[] = reportData.unpaid_exams || [];
+  const unpaidExams: UnpaidExam[] = currentReport.unpaid_exams || [];
 
   const addUnpaidExam = () => {
     const newExam: UnpaidExam = {
@@ -36,7 +36,7 @@ export function UnpaidExamsSection() {
       doctor_id: null,
     };
 
-    updateReportData({
+    updateCurrentReport({
       unpaid_exams: [...unpaidExams, newExam],
     });
   };
@@ -44,12 +44,12 @@ export function UnpaidExamsSection() {
   const updateUnpaidExam = (index: number, field: keyof UnpaidExam, value: string | null) => {
     const updated = [...unpaidExams];
     updated[index] = { ...updated[index], [field]: value };
-    updateReportData({ unpaid_exams: updated });
+    updateCurrentReport({ unpaid_exams: updated });
   };
 
   const removeUnpaidExam = (index: number) => {
     const updated = unpaidExams.filter((_, i) => i !== index);
-    updateReportData({ unpaid_exams: updated });
+    updateCurrentReport({ unpaid_exams: updated });
   };
 
   return (

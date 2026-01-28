@@ -62,6 +62,41 @@ export interface AssociateItem {
   type: 'fiscal' | 'non-fiscal';
 }
 
+export interface UnpaidExam {
+  id?: string;
+  patient_first_name: string;
+  patient_last_name: string;
+  reason: string;
+  doctor_id: string | null;
+}
+
+export interface TodayPatientQuick {
+  id?: string;
+  service_id: string;
+  service_name: string;
+  count: number;
+}
+
+export interface TodayPatientDetailed {
+  id?: string;
+  patient_first_name: string;
+  patient_last_name: string;
+  service_id: string;
+  service_name: string;
+  notes: string;
+}
+
+export interface PlannedProcedure {
+  id?: string;
+  patient_first_name: string;
+  patient_last_name: string;
+  procedure_type: string;
+  procedure_details: string;
+  planned_date: string;
+  planned_month: string;
+  notes: string;
+}
+
 export interface DailyReport {
   id: string;
   locationId: string;
@@ -74,6 +109,10 @@ export interface DailyReport {
   cardPayments: CardPaymentItem[];
   wireTransfers: WireTransferItem[];
   associates: AssociateItem[];
+  unpaid_exams?: UnpaidExam[];
+  today_patients_quick?: TodayPatientQuick[];
+  today_patients_detailed?: TodayPatientDetailed[];
+  planned_procedures?: PlannedProcedure[];
   notes: string;
   submittedBy: string;
   submittedByName?: string;
